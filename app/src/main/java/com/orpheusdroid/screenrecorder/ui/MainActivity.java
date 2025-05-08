@@ -28,7 +28,7 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.orpheusdroid.crashreporter.ui.CrashReporterActivity;
+// import com.orpheusdroid.crashreporter.ui.CrashReporterActivity;
 import com.orpheusdroid.screenrecorder.Config;
 import com.orpheusdroid.screenrecorder.Const;
 import com.orpheusdroid.screenrecorder.DonateActivity;
@@ -45,7 +45,7 @@ import com.orpheusdroid.screenrecorder.utils.SAFMigrationUtil;
 import java.io.File;
 import java.util.ArrayList;
 
-import ly.count.android.sdk.Countly;
+// import ly.count.android.sdk.Countly;
 
 public class MainActivity extends BaseActivity {
     private PermissionHelper permissionHelper;
@@ -173,12 +173,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (Config.getInstance(this).shouldSetupAnalytics()) {
-            if (!Countly.sharedInstance().isInitialized()) {
-                ((ScreenCamApp) getApplication()).setupAnalytics();
-            }
-            Countly.sharedInstance().onStart(this);
-        }
+        // if (Config.getInstance(this).shouldSetupAnalytics()) {
+        //     if (!Countly.sharedInstance().isInitialized()) {
+        //         ((ScreenCamApp) getApplication()).setupAnalytics();
+        //     }
+        //     Countly.sharedInstance().onStart(this);
+        // }
     }
 
     @Override
@@ -199,9 +199,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onStop() {
-        if (Countly.sharedInstance().isInitialized()) {
-            Countly.sharedInstance().onStop();
-        }
+        // if (Countly.sharedInstance().isInitialized()) {
+        //     Countly.sharedInstance().onStop();
+        // }
         super.onStop();
     }
 
@@ -399,9 +399,9 @@ public class MainActivity extends BaseActivity {
             case R.id.donate:
                 startActivity(new Intent(this, DonateActivity.class));
                 return true;
-            case R.id.crashLog:
-                startActivity(new Intent(this, CrashReporterActivity.class));
-                return true;
+            // case R.id.crashLog:
+            //     startActivity(new Intent(this, CrashReporterActivity.class));
+            //     return true;
             case R.id.help:
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/joinchat/C_ZSIUKiqUCI5NsPMAv0eA")));

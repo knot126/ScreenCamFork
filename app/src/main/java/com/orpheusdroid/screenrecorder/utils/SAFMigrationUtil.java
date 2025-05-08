@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.ProgressIndicator;
-import com.orpheusdroid.crashreporter.CrashReporter;
+// import com.google.android.material.progressindicator.ProgressIndicator;
+// import com.orpheusdroid.crashreporter.CrashReporter;
 import com.orpheusdroid.screenrecorder.Const;
 import com.orpheusdroid.screenrecorder.R;
 
@@ -30,7 +30,7 @@ public class SAFMigrationUtil extends AppCompatActivity {
     private TextView moveCount;
     private TextView copyText;
 
-    private ProgressIndicator progress;
+    // private ProgressIndicator progress;
 
     private ArrayList<File> videos = new ArrayList<>();
 
@@ -44,9 +44,9 @@ public class SAFMigrationUtil extends AppCompatActivity {
         progressText = findViewById(R.id.saf_progress_tv);
         moveCount = findViewById(R.id.saf_file_count);
         copyText = findViewById(R.id.saf_current_copy_file);
-        progress = findViewById(R.id.saf_progress_indicator);
+        // progress = findViewById(R.id.saf_progress_indicator);
 
-        progress.setIndeterminate(false);
+        // progress.setIndeterminate(false);
         progressText.setText(getString(R.string.saf_util_progress_text, 0));
 
         File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Const.APPDIR + File.separator);
@@ -66,14 +66,14 @@ public class SAFMigrationUtil extends AppCompatActivity {
 
     private void moveVideos() {
         infoHeader.setText(R.string.saf_util_info_header_copying);
-        progress.setMax(videos.size());
+        // progress.setMax(videos.size());
         for (int i = 0; i < videos.size(); i++) {
             Log.d(Const.TAG, "File Name: " + videos.get(i).getAbsolutePath());
             moveCount.setText(getString(R.string.saf_util_move_count, (i + 1), videos.size()));
             progressText.setText(getString(R.string.saf_util_progress_text, (i + 1)));
             copyText.setText(getString(R.string.saf_util_copying_text, videos.get(i).getAbsolutePath()));
             saveToMediaStore(videos.get(i));
-            progress.setProgress((i + 1));
+            // progress.setProgress((i + 1));
         }
         new MaterialAlertDialogBuilder(this)
                 .setTitle("Migration Complete")
@@ -118,7 +118,7 @@ public class SAFMigrationUtil extends AppCompatActivity {
 
         } catch (Exception e) {
             Log.d(Const.TAG, "Error saving screen recording: " + e);
-            CrashReporter.logException(e);
+            // CrashReporter.logException(e);
         }
     }
 }

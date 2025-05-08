@@ -25,14 +25,14 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.orpheusdroid.crashreporter.CrashReporter;
+// import com.orpheusdroid.crashreporter.CrashReporter;
 import com.orpheusdroid.screenrecorder.utils.LocaleHelper;
 
 import java.util.ArrayList;
 
-import ly.count.android.sdk.Countly;
-import ly.count.android.sdk.CountlyConfig;
-import ly.count.android.sdk.DeviceId;
+// import ly.count.android.sdk.Countly;
+// import ly.count.android.sdk.CountlyConfig;
+// import ly.count.android.sdk.DeviceId;
 
 /**
  * Todo: Add class description here
@@ -48,7 +48,7 @@ public class ScreenCamBaseApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        CrashReporter.initialize(this);
+        // CrashReporter.initialize(this);
         Config.getInstance(this).buildThemeConfig();
 
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
@@ -80,35 +80,35 @@ public class ScreenCamBaseApp extends Application {
     }
 
     public void setupAnalytics() {
-        Config.getInstance(this).buildConfig();
-        if (Config.getInstance(this).shouldSetupAnalytics()) {
-            ArrayList<String> features = new ArrayList<String>();
-            CountlyConfig countlyConfig = new CountlyConfig(this, "07273a5c91f8a932685be1e3ad0d160d3de6d4ba", "https://analytics.orpheusdroid.com")
-                    .setIdMode(DeviceId.Type.OPEN_UDID)
-                    .setHttpPostForced(true)
-                    .setRecordAllThreadsWithCrash()
-                    .setLoggingEnabled(BuildConfig.DEBUG)
-                    .setViewTracking(true)
-                    .enableCrashReporting()
-                    .setParameterTamperingProtectionSalt(getPackageName())
-                    .setRequiresConsent(true);
-
-            if (Config.getInstance(this).isCrashReportsEnabled()) {
-                features.add(Countly.CountlyFeatureNames.crashes);
-            }
-            if (Config.getInstance(this).isUsageStatsEnabled()) {
-                features.add(Countly.CountlyFeatureNames.sessions);
-                features.add(Countly.CountlyFeatureNames.views);
-                features.add(Countly.CountlyFeatureNames.events);
-                features.add(Countly.CountlyFeatureNames.users);
-            }
-
-            countlyConfig.setConsentEnabled(features.toArray(new String[0]));
-            Countly.sharedInstance().init(countlyConfig);
-
-            Log.d(Const.TAG, "Crashlytics enabled");
-        } else {
-            Log.d(Const.TAG, "Crashlytics disabled");
-        }
+        // Config.getInstance(this).buildConfig();
+        // if (Config.getInstance(this).shouldSetupAnalytics()) {
+        //     ArrayList<String> features = new ArrayList<String>();
+        //     CountlyConfig countlyConfig = new CountlyConfig(this, "07273a5c91f8a932685be1e3ad0d160d3de6d4ba", "https://analytics.orpheusdroid.com")
+        //             .setIdMode(DeviceId.Type.OPEN_UDID)
+        //             .setHttpPostForced(true)
+        //             .setRecordAllThreadsWithCrash()
+        //             .setLoggingEnabled(BuildConfig.DEBUG)
+        //             .setViewTracking(true)
+        //             .enableCrashReporting()
+        //             .setParameterTamperingProtectionSalt(getPackageName())
+        //             .setRequiresConsent(true);
+        // 
+        //     if (Config.getInstance(this).isCrashReportsEnabled()) {
+        //         features.add(Countly.CountlyFeatureNames.crashes);
+        //     }
+        //     if (Config.getInstance(this).isUsageStatsEnabled()) {
+        //         features.add(Countly.CountlyFeatureNames.sessions);
+        //         features.add(Countly.CountlyFeatureNames.views);
+        //         features.add(Countly.CountlyFeatureNames.events);
+        //         features.add(Countly.CountlyFeatureNames.users);
+        //     }
+        // 
+        //     countlyConfig.setConsentEnabled(features.toArray(new String[0]));
+        //     Countly.sharedInstance().init(countlyConfig);
+        // 
+        //     Log.d(Const.TAG, "Crashlytics enabled");
+        // } else {
+        //     Log.d(Const.TAG, "Crashlytics disabled");
+        // }
     }
 }

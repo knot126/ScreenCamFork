@@ -67,8 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:indeterminate="true"
-                app:indicatorColor="@color/colorAccent"
-                app:linearSeamless="true" />
+                app:indicatorColor="@color/colorAccent" />
 
             <View
                 android:layout_width="match_parent"

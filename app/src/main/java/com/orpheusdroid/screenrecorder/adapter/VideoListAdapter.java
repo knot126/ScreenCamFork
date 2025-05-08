@@ -155,7 +155,7 @@ public class VideoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 intent.putExtra(Intent.EXTRA_STREAM, videoItem.getVideo().getFileUri());
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                Intent chooserIntent = Intent.createChooser(intent, context.getString(com.orpheusdroid.crashreporter.R.string.intent_share_title));
+                Intent chooserIntent = Intent.createChooser(intent, "Share");
                 chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(chooserIntent);
                 break;
