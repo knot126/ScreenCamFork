@@ -387,13 +387,31 @@ public class RecordingService extends Service {
             currentFile = File.createTempFile(currentFilePath, "." + containerFormat);
 
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            if (containerFormat.equals("mp4")) {
+                mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            }
+            else {
+                mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.WEBM);
+            }
             mMediaRecorder.setOutputFile(currentFile);
             mMediaRecorder.setVideoSize(resolution.getWIDTH(), resolution.getHEIGHT());
-            mMediaRecorder.setVideoEncoder(getConfigHelper().getBestVideoEncoder(resolution.getWIDTH(), resolution.getHEIGHT()));
-            //mMediaRecorder.setMaxFileSize(configHelper.getFreeSpaceInBytes(config.getSaveLocation()));
-            if (mustRecAudio)
-                mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            
+            if (containerFormat.equals("mp4")) {
+                mMediaRecorder.setVideoEncoder(getConfigHelper().getBestVideoEncoder(resolution.getWIDTH(), resolution.getHEIGHT()));
+            }
+            else {
+                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.VP8);
+            }
+            
+            if (mustRecAudio) {
+                if (containerFormat.equals("mp4")) {
+                    mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+                }
+                else {
+                    mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.VORBIS);
+                }
+            }
+            
             mMediaRecorder.setVideoEncodingBitRate(BITRATE);
             mMediaRecorder.setVideoFrameRate(FPS);
             mMediaRecorder.setMaxFileSize(3221225472L); //3221225472L

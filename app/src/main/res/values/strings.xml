@@ -114,8 +114,8 @@
     <string name="preference_advanced_settings_warning_text">WARNING: Changing these settings without knowing what they are is highly risky.\n\nMost if not all of these settings could lead to stability issues and frequent crashes. Support will be limited with these settings modified.</string>
 
     <!-- Video Settings -->
-    <string name="preference_advanced_settings_video_encoder_title">Video Encoder</string>
-    <string name="preference_advanced_settings_video_encoder_description">Override the default encoder.</string>
+    <string name="preference_advanced_settings_video_encoder_title">MP4 Video Encoder</string>
+    <string name="preference_advanced_settings_video_encoder_description">Override the default encoder when using the MP4 container format.</string>
     <string name="preference_advanced_settings_video_encoder_key" translatable="false">video_encoder</string>
 
     <!-- Countly Strings -->
