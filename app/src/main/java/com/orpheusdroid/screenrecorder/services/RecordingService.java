@@ -180,7 +180,7 @@ public class RecordingService extends Service {
                         if (!savelocation.mkdir())
                             stopRecording();
                     }*/
-                    Log.d(Const.TAG, "Save path: " + SAVEPATH + ".mp4");
+                    Log.d(Const.TAG, "Save path: " + SAVEPATH + "." + containerFormat);
                     if (!isRecording) {
                         startRecording();
                         isRecording = true;
@@ -357,31 +357,6 @@ public class RecordingService extends Service {
 
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        /*int bufferSize = AudioRecord.getMinBufferSize(32000,
-                AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT) * 2;
-
-        AudioPlaybackCaptureConfiguration audioConfig =
-                new AudioPlaybackCaptureConfiguration.Builder(mMediaProjection)
-                        .addMatchingUsage(AudioAttributes.USAGE_MEDIA)
-                        .addMatchingUsage(AudioAttributes.USAGE_UNKNOWN)
-                        .addMatchingUsage(AudioAttributes.USAGE_GAME)
-                        .build();
-
-        AudioFormat audioFormat = new AudioFormat.Builder()
-                .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-                .setSampleRate(32000)
-                .setChannelMask(AudioFormat.CHANNEL_IN_STEREO)
-                .build();
-
-
-        AudioRecord recorder = new AudioRecord.Builder()
-                .setAudioPlaybackCaptureConfig(audioConfig)
-                //.setAudioSource(MediaRecorder.AudioSource.CAMCORDER)
-                .setAudioFormat(audioFormat)
-                .setBufferSizeInBytes(bufferSize)
-                .build();
-        recorder.startRecording();*/
-
         try {
             switch (audioRecSource) {
                 case "1":
@@ -407,30 +382,18 @@ public class RecordingService extends Service {
                     break;
             }
 
+            //currentFilePath = File.createTempFile(SAVEPATH, ".mp4");
             currentFilePath = SAVEPATH;
             currentFile = File.createTempFile(currentFilePath, "." + containerFormat);
 
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mMediaRecorder.setOutputFile(currentFile);
             mMediaRecorder.setVideoSize(resolution.getWIDTH(), resolution.getHEIGHT());
-            
-            if (containerFormat.equals("mp4")) {
-                mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-                mMediaRecorder.setVideoEncoder(getConfigHelper().getBestVideoEncoder(resolution.getWIDTH(), resolution.getHEIGHT()));
-                
-                if (mustRecAudio) {
-                    mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-                }
-            }
-            else {
-                mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.WEBM);
-                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.VP8);
-                
-                if (mustRecAudio) {
-                    mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.VORBIS);
-                }
-            }
-            
+            mMediaRecorder.setVideoEncoder(getConfigHelper().getBestVideoEncoder(resolution.getWIDTH(), resolution.getHEIGHT()));
+            //mMediaRecorder.setMaxFileSize(configHelper.getFreeSpaceInBytes(config.getSaveLocation()));
+            if (mustRecAudio)
+                mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             mMediaRecorder.setVideoEncodingBitRate(BITRATE);
             mMediaRecorder.setVideoFrameRate(FPS);
             mMediaRecorder.setMaxFileSize(3221225472L); //3221225472L
@@ -452,6 +415,7 @@ public class RecordingService extends Service {
                         Toast.makeText(RecordingService.this, "Next file started", Toast.LENGTH_SHORT).show();
                         Log.d(Const.TAG, "Next file started");
                         Log.d(Const.TAG, "Current Path:" + currentFilePath + "\n next path: " + nextFilePath);
+                        //indexFile(currentFilePath + ".mp4", false);
                         saveToMediaStore(currentFile, false);
                         currentFilePath = nextFilePath;
                         currentFile = nextFile;
@@ -509,6 +473,7 @@ public class RecordingService extends Service {
         mAudioManager.setParameters("screenRecordAudioSource=0");
         try {
             mMediaRecorder.stop();
+            //indexFile(currentFilePath, true);
             saveToMediaStore(currentFile, true);
             android.util.Log.i(Const.TAG, "MediaProjection Stopped");
         } catch (RuntimeException e) {
@@ -528,6 +493,30 @@ public class RecordingService extends Service {
             LocalBroadcastManager.getInstance(this).sendBroadcast(result);
             stopSelf();
         }
+    }
+
+    /* Its weird that android does not index the files immediately once its created and that causes
+     * trouble for user in finding the video in gallery. Let's explicitly announce the file creation
+     * to android and index it */
+    private void indexFile(String filePath, boolean isLast) {
+        //Create a new ArrayList and add the newly created video file path to it
+        ArrayList<String> toBeScanned = new ArrayList<>();
+        toBeScanned.add(filePath + "." + containerFormat);
+        String[] toBeScannedStr = new String[toBeScanned.size()];
+        toBeScannedStr = toBeScanned.toArray(toBeScannedStr);
+
+        //Request MediaScannerConnection to scan the new file and index it
+        MediaScannerConnection.scanFile(getApplicationContext(), toBeScannedStr, null, (path, uri) -> {
+            Log.d(Const.TAG, "SCAN COMPLETED: " + path + ", URI: " + uri);
+            //Show toast on main thread
+
+            if (isLast) {
+                Message message = mHandler.obtainMessage();
+                message.sendToTarget();
+                //stopSelf();
+                notificationHelper.showShareNotification(uri);
+            }
+        });
     }
 
     private void stopScreenSharing() {

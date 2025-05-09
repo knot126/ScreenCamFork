@@ -278,7 +278,7 @@ public class Config {
         saveLocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Const.APPDIR).getAbsolutePath();
         fileFormat = preferences.getString(getString(R.string.filename_key), "yyyyMMdd_HHmmss");
         prefix = preferences.getString(getString(R.string.fileprefix_key), "recording");
-        containerFormat = preferences.getString(getString(R.string.fileprefix_key), "mp4");
+        containerFormat = preferences.getString(getString(R.string.container_key), "mp4");
 
         resolution = preferences.getString(getString(R.string.res_key), "");
         fps = preferences.getString(getString(R.string.fps_key), "30");
