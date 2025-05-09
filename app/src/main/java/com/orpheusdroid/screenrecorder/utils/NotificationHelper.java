@@ -138,11 +138,14 @@ public class NotificationHelper {
         /*Uri videoUri = FileProvider.getUriForFile(
                 mContext, BuildConfig.APPLICATION_ID + ".provider",
                 new File(SAVEPATH));*/
+                
+        String[] a = videoUri.toString().split("\\.");
+        String type = a[a.length - 1];
 
         Intent Shareintent = new Intent()
                 .setAction(Intent.ACTION_SEND)
                 .putExtra(Intent.EXTRA_STREAM, videoUri)
-                .setType("video/mp4");
+                .setType("video/" + type);
 
         /*Intent editIntent = new Intent(this, EditVideoActivity.class);
         editIntent.putExtra(Const.VIDEO_EDIT_URI_KEY, SAVEPATH);

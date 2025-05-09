@@ -400,7 +400,7 @@ public class RecordingService extends Service {
                 mMediaRecorder.setVideoEncoder(getConfigHelper().getBestVideoEncoder(resolution.getWIDTH(), resolution.getHEIGHT()));
             }
             else {
-                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.VP8);
+                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
             }
             
             if (mustRecAudio) {
@@ -408,7 +408,12 @@ public class RecordingService extends Service {
                     mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
                 }
                 else {
-                    mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.VORBIS);
+                    if (Build.VERSION.SDK_INT >= 29) {
+                        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.OPUS);
+                    }
+                    else {
+                        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+                    }
                 }
             }
             
