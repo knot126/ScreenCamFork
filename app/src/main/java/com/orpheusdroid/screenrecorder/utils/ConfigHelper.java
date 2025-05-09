@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.lang.Math;
 
 import static com.orpheusdroid.screenrecorder.Const.AUDIO_SOURCE_ALERT_DIALOG_BLOCK;
 
@@ -78,7 +79,7 @@ public class ConfigHelper {
         while (iterator.hasNext()) {
             String resolution = iterator.next();
             if (Integer.parseInt(resolution) > Integer.parseInt(nativeRes)) {
-                resEntries.remove(resolution + "P");
+                resEntries.remove(resolution + "p");
                 iterator.remove();
                 hasValuesChanged = true;
                 Log.d(Const.TAG, "Removed " + resolution + " from entries");
@@ -87,7 +88,7 @@ public class ConfigHelper {
 
         if (!resEntryValues.contains(nativeRes)) {
             Log.d(Const.TAG, "Add native res! " + nativeRes);
-            resEntries.add(nativeRes + "P");
+            resEntries.add(nativeRes + "p");
             resEntryValues.add(nativeRes);
             hasValuesChanged = true;
         }

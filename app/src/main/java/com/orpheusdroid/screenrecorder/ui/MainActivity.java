@@ -402,13 +402,13 @@ public class MainActivity extends BaseActivity {
             // case R.id.crashLog:
             //     startActivity(new Intent(this, CrashReporterActivity.class));
             //     return true;
-            case R.id.help:
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/joinchat/C_ZSIUKiqUCI5NsPMAv0eA")));
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(this, "No browser app installed!", Toast.LENGTH_SHORT).show();
-                }
-                return true;
+            // case R.id.help:
+            //     try {
+            //         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/joinchat/C_ZSIUKiqUCI5NsPMAv0eA")));
+            //     } catch (ActivityNotFoundException e) {
+            //         Toast.makeText(this, "No browser app installed!", Toast.LENGTH_SHORT).show();
+            //     }
+            //     return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

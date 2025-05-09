@@ -34,10 +34,14 @@
     <string name="video_settings_header">Video Settings</string>
     <string name="audio_settings_header">Audio Settings</string>
     <string name="recording_settings_header">Recording Settings</string>
-    <string name="misc_settings_header">Misc</string>
-    <string name="advance_video_settings_header">Advance Video Settings</string>
+    <string name="misc_settings_header">Misc Settings</string>
+    <string name="advance_video_settings_header">Advanced Video Settings</string>
 
     <!-- Video Preferences -->
+    <string name="preference_container_title">Container format</string>
+    <string name="preference_container_summary">Select the media container format to use</string>
+    <string name="container_key" translatable="false">container</string>
+    
     <string name="preference_resolution_title">Resolution</string>
     <string name="preference_resolution_summary">Select the resolution to record at</string>
     <string name="res_key" translatable="false">resolution</string>
@@ -115,7 +119,7 @@
     <string name="preference_advanced_settings_video_encoder_key" translatable="false">video_encoder</string>
 
     <!-- Countly Strings -->
-    <string name="crashlytics_settings_header">Statistics and Crash reporting</string>
+<!--    <string name="crashlytics_settings_header">Statistics and Crash reporting</string>
     <string name="preference_crashlytics_master_title">Enable Crashlytics</string>
     <string name="preference_crashlytics_master_key" translatable="false">crashlytics_key</string>
     <string name="preference_crashlytics_crash_report_title">Send Crash reports</string>
@@ -123,7 +127,7 @@
     <string name="preference_crashlytics_crash_report_key" translatable="false">crash_report_key</string>
     <string name="preference_crashlytics_usage_stats_title">Send usage statistics</string>
     <string name="preference_crashlytics_usage_stats_summary">Send anonymous usage statics</string>
-    <string name="preference_crashlytics_usage_stats_key" translatable="false">statistics_key</string>
+    <string name="preference_crashlytics_usage_stats_key" translatable="false">statistics_key</string>-->
 
     <!-- Toast messages -->
     <string name="recording_failed_toast">Screen recording failed.</string>

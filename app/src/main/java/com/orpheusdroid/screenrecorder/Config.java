@@ -16,6 +16,7 @@ public class Config {
     private String saveLocation;
     private String fileFormat;
     private String prefix;
+    private String containerFormat;
 
     private String resolution;
     private String fps;
@@ -40,10 +41,6 @@ public class Config {
     private String codecOverride;
 
     private String language;
-
-    private boolean crashlyticsEnabled;
-    private boolean crashReportsEnabled;
-    private boolean usageStatsEnabled;
 
     private Config(Context mContext) {
         this.mContext = mContext;
@@ -82,6 +79,14 @@ public class Config {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+    }
+    
+    public String getContainerFormat() {
+        return containerFormat;
+    }
+
+    public void setContainerFormat(String containerFormat) {
+        this.containerFormat = containerFormat;
     }
 
     public String getResolution() {
@@ -229,31 +234,31 @@ public class Config {
     }
 
     public boolean isCrashlyticsEnabled() {
-        return crashlyticsEnabled;
+        return false;
     }
 
     public void setCrashlyticsEnabled(boolean crashlyticsEnabled) {
-        this.crashlyticsEnabled = crashlyticsEnabled;
+        return;
     }
 
     public boolean isCrashReportsEnabled() {
-        return crashReportsEnabled;
+        return false;
     }
 
     public void setCrashReportsEnabled(boolean crashReportsEnabled) {
-        this.crashReportsEnabled = crashReportsEnabled;
+        return;
     }
 
     public boolean isUsageStatsEnabled() {
-        return usageStatsEnabled;
+        return false;
     }
 
     public void setUsageStatsEnabled(boolean usageStatsEnabled) {
-        this.usageStatsEnabled = usageStatsEnabled;
+        return;
     }
 
     public boolean shouldSetupAnalytics() {
-        return isCrashlyticsEnabled() && (isCrashReportsEnabled() || isUsageStatsEnabled());
+        return false;
     }
 
     private SharedPreferences getPreferences() {
@@ -273,6 +278,7 @@ public class Config {
         saveLocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Const.APPDIR).getAbsolutePath();
         fileFormat = preferences.getString(getString(R.string.filename_key), "yyyyMMdd_HHmmss");
         prefix = preferences.getString(getString(R.string.fileprefix_key), "recording");
+        containerFormat = preferences.getString(getString(R.string.fileprefix_key), "mp4");
 
         resolution = preferences.getString(getString(R.string.res_key), "");
         fps = preferences.getString(getString(R.string.fps_key), "30");
@@ -293,10 +299,6 @@ public class Config {
         codecOverride = preferences.getString(getString(R.string.preference_advanced_settings_video_encoder_key), "0");
 
         language = preferences.getString(getString(R.string.preference_language_key), Locale.getDefault().getISO3Language());
-
-        crashlyticsEnabled = preferences.getBoolean(getString(R.string.preference_crashlytics_master_key), false);
-        crashReportsEnabled = preferences.getBoolean(getString(R.string.preference_crashlytics_crash_report_key), false);
-        usageStatsEnabled = preferences.getBoolean(getString(R.string.preference_crashlytics_usage_stats_key), false);
 
         buildThemeConfig();
     }
@@ -331,9 +333,6 @@ public class Config {
                 ", targetAppPackage='" + targetAppPackage + '\'' +
                 ", codecOverride='" + codecOverride + '\'' +
                 ", language='" + language + '\'' +
-                ", crashlyticsEnabled=" + crashlyticsEnabled +
-                ", crashReportsEnabled=" + crashReportsEnabled +
-                ", usageStatsEnabled=" + usageStatsEnabled +
                 '}';
     }
 }

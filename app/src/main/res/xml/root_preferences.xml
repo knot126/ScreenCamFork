@@ -20,6 +20,15 @@
     <PreferenceCategory app:title="@string/video_settings_header">
 
         <ListPreference
+            app:defaultValue="mp4"
+            app:entries="@array/containersArray"
+            app:entryValues="@array/containersValues"
+            app:key="@string/container_key"
+            app:summary="@string/preference_container_summary"
+            app:title="@string/preference_container_title"
+            app:useSimpleSummaryProvider="true" />
+        
+        <ListPreference
             app:defaultValue="1080"
             app:entries="@array/resolutionsArray"
             app:entryValues="@array/resolutionValues"
@@ -138,7 +147,7 @@
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/crashlytics_settings_header">
+    <!--<PreferenceCategory android:title="@string/crashlytics_settings_header">
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="@string/preference_crashlytics_master_key"
@@ -158,7 +167,7 @@
             android:summary="@string/preference_crashlytics_usage_stats_summary"
             android:title="@string/preference_crashlytics_usage_stats_title" />
 
-    </PreferenceCategory>
+    </PreferenceCategory>-->
 
     <PreferenceCategory app:title="@string/misc_settings_header">
         <ListPreference
@@ -177,14 +186,14 @@
             app:title="@string/preference_language_title"
             app:useSimpleSummaryProvider="true" />
 
-        <Preference
+        <!--<Preference
             android:key="@string/preference_magisk_download_key"
             android:summary="@string/preference_magisk_download_summary"
             android:title="@string/preference_magisk_download_title">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://screenrecorder.orpheusdroid.com/downloads/magisk/stable/" />
-        </Preference>
+                android:data="https://screenrecorder.orpheusdroid.com/downloads/magisk/stable/" />-->
+<!--         </Preference> -->
         <Preference
             android:key="@string/preference_faq_key"
             android:summary="@string/preference_faq_summary"

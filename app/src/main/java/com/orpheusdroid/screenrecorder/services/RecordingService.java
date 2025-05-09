@@ -80,6 +80,8 @@ public class RecordingService extends Service {
     private File currentFile;
     private File nextFile;
     private BroadcastReceiver serviceBroadcastReceiver;
+    
+    private String containerFormat;
 
     //private File saveFile;
 
@@ -348,6 +350,7 @@ public class RecordingService extends Service {
         String audioSamplingRate = getConfig().getAudioSamplingRate();
         String audioChannel = getConfig().getAudioChannel();
         String audioRecSource = getConfig().getAudioSource();
+        containerFormat = getConfig().getContainerFormat();
         //String SAVEPATH = config.getSaveLocation();
         int FPS = Integer.parseInt(getConfig().getFps());
         int BITRATE = Integer.parseInt(getConfig().getVideoBitrate());
@@ -404,18 +407,30 @@ public class RecordingService extends Service {
                     break;
             }
 
-            //currentFilePath = File.createTempFile(SAVEPATH, ".mp4");
             currentFilePath = SAVEPATH;
-            currentFile = File.createTempFile(currentFilePath, ".mp4");
+            currentFile = File.createTempFile(currentFilePath, "." + containerFormat);
 
             mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mMediaRecorder.setOutputFile(currentFile);
             mMediaRecorder.setVideoSize(resolution.getWIDTH(), resolution.getHEIGHT());
-            mMediaRecorder.setVideoEncoder(getConfigHelper().getBestVideoEncoder(resolution.getWIDTH(), resolution.getHEIGHT()));
-            //mMediaRecorder.setMaxFileSize(configHelper.getFreeSpaceInBytes(config.getSaveLocation()));
-            if (mustRecAudio)
-                mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            
+            if (containerFormat.equals("mp4")) {
+                mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+                mMediaRecorder.setVideoEncoder(getConfigHelper().getBestVideoEncoder(resolution.getWIDTH(), resolution.getHEIGHT()));
+                
+                if (mustRecAudio) {
+                    mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+                }
+            }
+            else {
+                mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.WEBM);
+                mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.VP8);
+                
+                if (mustRecAudio) {
+                    mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.VORBIS);
+                }
+            }
+            
             mMediaRecorder.setVideoEncodingBitRate(BITRATE);
             mMediaRecorder.setVideoFrameRate(FPS);
             mMediaRecorder.setMaxFileSize(3221225472L); //3221225472L
@@ -424,7 +439,7 @@ public class RecordingService extends Service {
                     case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_APPROACHING:
                         try {
                             nextFilePath = SAVEPATH + "_" + nextFileCount;
-                            nextFile = File.createTempFile(SAVEPATH, "_" + nextFileCount + ".mp4");
+                            nextFile = File.createTempFile(SAVEPATH, "_" + nextFileCount + "." + containerFormat);
                             mediaRecorder.setNextOutputFile(nextFile);
                             Toast.makeText(RecordingService.this, "Max File limit approaching. Next file name will be suffixed with " + nextFileCount, Toast.LENGTH_SHORT).show();
                             nextFileCount++;
@@ -437,7 +452,6 @@ public class RecordingService extends Service {
                         Toast.makeText(RecordingService.this, "Next file started", Toast.LENGTH_SHORT).show();
                         Log.d(Const.TAG, "Next file started");
                         Log.d(Const.TAG, "Current Path:" + currentFilePath + "\n next path: " + nextFilePath);
-                        //indexFile(currentFilePath + ".mp4", false);
                         saveToMediaStore(currentFile, false);
                         currentFilePath = nextFilePath;
                         currentFile = nextFile;
@@ -454,9 +468,9 @@ public class RecordingService extends Service {
     private void saveToMediaStore(File video, boolean isLast) {
         Log.d(Const.TAG, "Saving video from: " + video.getAbsolutePath());
         ContentValues values = new ContentValues();
-        values.put(MediaStore.Video.Media.DISPLAY_NAME, currentFilePath + ".mp4");
-        values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-        values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+        values.put(MediaStore.Video.Media.DISPLAY_NAME, currentFilePath + "." + containerFormat);
+        values.put(MediaStore.Video.Media.MIME_TYPE, "video/" + containerFormat);
+        values.put(MediaStore.Video.Media.MIME_TYPE, "video/" + containerFormat);
         values.put(MediaStore.Video.Media.DATE_ADDED, System.currentTimeMillis());
 
         ContentResolver resolver = getContentResolver();
@@ -470,9 +484,9 @@ public class RecordingService extends Service {
         } else {
             String PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES) + File.separator + Const.APPDIR;
             new File(PATH).mkdirs();
-            Log.d(Const.TAG, "save path: " + PATH + File.separator + currentFilePath + ".mp4");
+            Log.d(Const.TAG, "save path: " + PATH + File.separator + currentFilePath + "." + containerFormat);
             collectionUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-            values.put(MediaStore.Video.Media.DATA, PATH + File.separator + currentFilePath + ".mp4");
+            values.put(MediaStore.Video.Media.DATA, PATH + File.separator + currentFilePath + "." + containerFormat);
         }
 
         try {
@@ -495,7 +509,6 @@ public class RecordingService extends Service {
         mAudioManager.setParameters("screenRecordAudioSource=0");
         try {
             mMediaRecorder.stop();
-            //indexFile(currentFilePath, true);
             saveToMediaStore(currentFile, true);
             android.util.Log.i(Const.TAG, "MediaProjection Stopped");
         } catch (RuntimeException e) {
@@ -515,30 +528,6 @@ public class RecordingService extends Service {
             LocalBroadcastManager.getInstance(this).sendBroadcast(result);
             stopSelf();
         }
-    }
-
-    /* Its weird that android does not index the files immediately once its created and that causes
-     * trouble for user in finding the video in gallery. Let's explicitly announce the file creation
-     * to android and index it */
-    private void indexFile(String filePath, boolean isLast) {
-        //Create a new ArrayList and add the newly created video file path to it
-        ArrayList<String> toBeScanned = new ArrayList<>();
-        toBeScanned.add(filePath + ".mp4");
-        String[] toBeScannedStr = new String[toBeScanned.size()];
-        toBeScannedStr = toBeScanned.toArray(toBeScannedStr);
-
-        //Request MediaScannerConnection to scan the new file and index it
-        MediaScannerConnection.scanFile(getApplicationContext(), toBeScannedStr, null, (path, uri) -> {
-            Log.d(Const.TAG, "SCAN COMPLETED: " + path + ", URI: " + uri);
-            //Show toast on main thread
-
-            if (isLast) {
-                Message message = mHandler.obtainMessage();
-                message.sendToTarget();
-                //stopSelf();
-                notificationHelper.showShareNotification(uri);
-            }
-        });
     }
 
     private void stopScreenSharing() {
